@@ -1,0 +1,63 @@
+import { ActivityLog } from "./activitylog"
+
+model User {
+    id              String      @id @default(uuid())
+    email           String      @unique
+    password        String
+    aclRole         UserRole    @default(USER)
+
+
+    // Personal data
+    name        String?
+    lastname    String?
+    birthday    DateTime?
+    gender      Gender?
+
+    // Privacy options
+    newsletterOptIn          Boolean @default(false)
+
+    // Deleted fields
+    deletedAt    DateTime?
+
+    // Relations
+    loginLog                    LoginLog[]
+
+    // Generic fields
+    status    UserStatus   @default(ACTIVE)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+}
+
+
+model LoginLog {
+    id      String       @id @default(uuid())
+    ip      String?
+
+    // Relations
+    actor  User   @relation(fields: [userId], references: [id])
+    userId String
+
+    // Generic fields
+    createdAt DateTime @default(now())
+}
+
+
+enum UserRole {
+    USER
+    ADMIN
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    NO_BINARY
+}
+
+
+enum UserStatus {
+    ACTIVE
+    INACTIVE
+    BANNED
+    DELETED_BY_USER
+    DELETED_BY_ADMIN
+}

@@ -1,0 +1,21 @@
+version: "3.5"
+
+services:
+  postgres:
+    image: postgres:14.9-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: control-db
+      PGDATA: /data/postgres
+    volumes:
+      - ./node_modules/.postgres:/data/postgres
+    ports:
+      - "${DATABASE_PORT:-5432}:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge

@@ -1,0 +1,5 @@
+.next
+.history
+public/**
+infra/cdk.out
+infra/node_modules

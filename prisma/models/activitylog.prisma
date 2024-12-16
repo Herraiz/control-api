@@ -1,0 +1,22 @@
+import { User } from "./user"
+
+model ActivityLog {
+    id     String @id @default(uuid())
+    source String @default("Control")
+    inputModel    String
+    inputModelId  String
+    action        String
+    outputModel   String?
+    outputModelId String?
+    errorCode     String?
+    errorMessage  String?
+
+    message String?
+
+    // Relations
+    actor   User   @relation(fields: [actorId], references: [id])
+    actorId String
+
+    // Generic fields
+    createdAt DateTime @default(now())
+}
