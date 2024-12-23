@@ -5,7 +5,7 @@ model Transaction {
   description String?
   amount      Float
   type        TransactionType @default(EXPENSE)
-  category    Category
+  category    Category?
   incomeType  IncomeType?
 
   // Relations

@@ -153,7 +153,7 @@ type RegisterResponse {
 type Transaction {
   amount: Float!
   budget: Budget
-  category: Category!
+  category: Category
   createdAt: DateTime
   date: DateTime!
   debt: Debt

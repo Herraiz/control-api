@@ -11,7 +11,7 @@ export default objectType({
     t.nonNull.field("type", {
       type: "TransactionType",
     });
-    t.nonNull.field("category", {
+    t.nullable.field("category", {
       type: "Category",
     });
     t.nullable.field("incomeType", {
