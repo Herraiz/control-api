@@ -1,0 +1,59 @@
+model Transaction {
+  id          String          @id @default(uuid())
+  name        String
+  date        DateTime        @default(now())
+  description String?
+  amount      Float
+  type        TransactionType @default(EXPENSE)
+  category    Category
+  incomeType  IncomeType?
+
+  // Relations
+  userId      String
+  user        User            @relation(fields: [userId], references: [id])
+  budgetId    String?
+  budget      Budget?         @relation(fields: [budgetId], references: [id])
+  debtId      String?
+  debt        Debt?           @relation(fields: [debtId], references: [id])
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  DEBT
+}
+
+enum Category {
+  FOOD_AND_GROCERIES
+  RESTAURANTS_AND_DINING
+  TRANSPORTATION
+  HOUSING_AND_RENT
+  UTILITIES
+  HEALTHCARE
+  INSURANCE
+  PERSONAL_CARE
+  CLOTHING
+  ENTERTAINMENT
+  TRAVEL
+  EDUCATION
+  GIFTS_AND_DONATIONS
+  SAVINGS_AND_INVESTMENTS
+  TAXES
+  DEBT_PAYMENTS
+  MISCELLANEOUS
+}
+
+enum IncomeType {
+  SALARY
+  PENSION
+  INVESTMENT
+  RENTAL
+  BUSINESS
+  FREELANCE
+  GOVERNMENT_BENEFITS
+  GIFTS
+  OTHER
+}

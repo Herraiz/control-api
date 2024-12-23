@@ -23,7 +23,7 @@ generator client {
 
 model ActivityLog {
   id            String  @id @default(uuid())
-  source        String  @default("Control-Core")
+  source        String  @default("Control")
   inputModel    String
   inputModelId  String
   action        String
@@ -40,6 +40,127 @@ model ActivityLog {
 
   // Generic fields
   createdAt DateTime @default(now())
+}
+
+model LoginLog {
+  id String  @id @default(uuid())
+  ip String?
+
+  // Relations
+  actor  User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Generic fields
+  createdAt DateTime @default(now())
+}
+
+//
+// budget.prisma
+//
+
+model Budget {
+  id       String   @id @default(uuid())
+  name     String
+  amount   Float
+  // category enum defined in transaction.prisma
+  category Category
+  endDate  DateTime
+
+  // Relations
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//
+// debt.prisma
+//
+
+model Debt {
+  id           String        @id @default(uuid())
+  name         String
+  totalAmount  Float
+  interestRate Float
+  interestType InterestType
+  paymentYears Int
+  startDate    DateTime      @default(now())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+enum InterestType {
+  TIN
+  TAE
+}
+
+//
+// transaction.prisma
+//
+
+model Transaction {
+  id          String          @id @default(uuid())
+  name        String
+  date        DateTime        @default(now())
+  description String?
+  amount      Float
+  type        TransactionType @default(EXPENSE)
+  category    Category
+  incomeType  IncomeType?
+
+  // Relations
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+  budgetId String?
+  budget   Budget? @relation(fields: [budgetId], references: [id])
+  debtId   String?
+  debt     Debt?   @relation(fields: [debtId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  DEBT
+}
+
+enum Category {
+  FOOD_AND_GROCERIES
+  RESTAURANTS_AND_DINING
+  TRANSPORTATION
+  HOUSING_AND_RENT
+  UTILITIES
+  HEALTHCARE
+  INSURANCE
+  PERSONAL_CARE
+  CLOTHING
+  ENTERTAINMENT
+  TRAVEL
+  EDUCATION
+  GIFTS_AND_DONATIONS
+  SAVINGS_AND_INVESTMENTS
+  TAXES
+  DEBT_PAYMENTS
+  MISCELLANEOUS
+}
+
+enum IncomeType {
+  SALARY
+  PENSION
+  INVESTMENT
+  RENTAL
+  BUSINESS
+  FREELANCE
+  GOVERNMENT_BENEFITS
+  GIFTS
+  OTHER
 }
 
 //
@@ -61,41 +182,31 @@ model User {
   // Privacy options
   newsletterOptIn Boolean @default(false)
 
-  // Deleted fields
+  // Relations
+  ActivityLog  ActivityLog[]
+  LoginLog     LoginLog[]
+  transactions Transaction[]
+  budgets      Budget[]
+  debts        Debt[]
+  settings     UserSettings?
+
+  // Generic fields
+  status UserStatus @default(ACTIVE)
+
   deletedAt DateTime?
-
-  // Relations
-  loginLog LoginLog[]
-
-  // Generic fields
-  status      Status        @default(ACTIVE)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now()) @updatedAt
-  ActivityLog ActivityLog[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 }
 
-model UserTimestampAction {
-  userId     String
-  actionType UserTimestampActionType
-  sendAt     DateTime                @default(now()) @updatedAt
-
-  @@unique([userId, actionType])
+model UserSettings {
+  id       String  @id @default(uuid())
+  userId   String  @unique
+  user     User    @relation(fields: [userId], references: [id])
+  currency String  @default("EUR")
+  language String  @default("en")
+  darkMode Boolean @default(false)
 }
 
-model LoginLog {
-  id   String       @id @default(uuid())
-  ip   String?
-  type LoginLogType
-
-  // Relations
-  actor  User   @relation(fields: [userId], references: [id])
-  userId String
-
-  // Generic fields
-  createdAt DateTime @default(now())
-}
-
-// #region Enums
 enum UserRole {
   USER
   ADMIN
@@ -107,20 +218,10 @@ enum Gender {
   NO_BINARY
 }
 
-enum Status {
+enum UserStatus {
   ACTIVE
   INACTIVE
   BANNED
   DELETED_BY_USER
   DELETED_BY_ADMIN
-}
-
-enum UserTimestampActionType {
-  ACTIVATION_SEND
-  RESET_PASSWORD
-}
-
-enum LoginLogType {
-  NEW_TOKEN
-  RENEW_TOKEN
 }
