@@ -8,8 +8,8 @@ async function main() {
 
   const userAdmin = await prisma.user.create({
     data: {
-      email: "admin@appfinanzas.es",
-      password: signData(`admin@appfinanzas.es:admin`),
+      email: "admin@pokeapp.es",
+      password: signData(`admin@pokeapp.es:admin`),
       newsletterOptIn: false,
       aclRole: "ADMIN",
     },
@@ -22,8 +22,8 @@ async function main() {
   for (let i = 1; i <= 5; i++) {
     await prisma.user.create({
       data: {
-        email: `usuario${i}@appfinanzas.es`,
-        password: signData(`usuario${i}@appfinanzas.es:admin`),
+        email: `usuario${i}@pokeapp.es`,
+        password: signData(`usuario${i}@pokeapp.es:admin`),
         newsletterOptIn: false,
         aclRole: "USER",
         name: `Usuario${i}`,
@@ -36,7 +36,7 @@ async function main() {
   }
 
   const user1 = await prisma.user.findUnique({
-    where: { email: "usuario1@appfinanzas.es" },
+    where: { email: "usuario1@pokeapp.es" },
   });
 
   /* ############################## */
