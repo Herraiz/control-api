@@ -1,8 +1,5 @@
-import { list, nonNull, objectType, stringArg } from "nexus";
-import {
-  authorizeFieldCurrentUser,
-  authorizeFieldUserIsAdmin,
-} from "@/graphql/utils";
+import { list, nonNull, objectType } from "nexus";
+import { authorizeFieldCurrentUser } from "@/graphql/utils";
 
 export default objectType({
   name: "User",
@@ -40,6 +37,12 @@ export default objectType({
       authorize: authorizeFieldCurrentUser,
     });
     t.dateTime("deletedAt", {
+      authorize: authorizeFieldCurrentUser,
+    });
+    t.dateTime("createdAt", {
+      authorize: authorizeFieldCurrentUser,
+    });
+    t.dateTime("updatedAt", {
       authorize: authorizeFieldCurrentUser,
     });
   },
