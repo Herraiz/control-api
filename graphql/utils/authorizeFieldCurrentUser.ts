@@ -2,11 +2,7 @@ import { User, UserRole } from "@prisma/client";
 import { Context } from "@/graphql/context";
 
 export default function authorizeFieldCurrentUser(
-  target: Partial<
-    | Pick<User, "id">
-    | Record<"userId", string>
-    | Record<"newNotificationMessage", Record<"userId", string>>
-  >,
+  target: Partial<Pick<User, "id"> | Record<"userId", string>>,
   args: Partial<Record<"userId", string>>,
   ctx: Context,
 ): boolean {
@@ -20,11 +16,6 @@ export default function authorizeFieldCurrentUser(
 
   if ("userId" in target) {
     return target.userId === ctx.user?.id;
-  }
-
-  // TODO CHECK THIS FOR SUBSCRIPTIONS
-  if ("newNotificationMessage" in target) {
-    return target.newNotificationMessage.userId === args.userId;
   }
 
   if ("id" in target) {
