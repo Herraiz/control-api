@@ -12,6 +12,7 @@ async function main() {
       password: signData(`admin@pokeapp.es:admin`),
       newsletterOptIn: false,
       aclRole: "ADMIN",
+      currency: "EUR",
     },
   });
 
@@ -31,6 +32,7 @@ async function main() {
         birthday: new Date(1990, i, i),
         gender: i % 2 === 0 ? "MALE" : "FEMALE",
         status: "ACTIVE",
+        currency: "EUR",
       },
     });
   }
