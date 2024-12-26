@@ -123,10 +123,19 @@ type Mutation {
   createBudget(
     amount: Float!
     category: Category!
-    endDate: String!
+    endDate: DateTime!
     name: String!
   ): Budget
+  createDebt(
+    interestRate: Float!
+    interestType: InterestType!
+    name: String!
+    paymentYears: Int!
+    startDate: DateTime!
+    totalAmount: Float!
+  ): Debt
   deleteBudget(budgetId: String!): Boolean
+  deleteDebt(debtId: String!): Boolean
   login(email: String!, password: String!): LoginResponse
   registerUser(
     email: String!
@@ -141,9 +150,18 @@ type Mutation {
     amount: Float
     budgetId: String!
     category: Category
-    endDate: Date
+    endDate: DateTime
     name: String
   ): Budget
+  updateDebt(
+    debtId: String!
+    interestRate: Float
+    interestType: InterestType
+    name: String
+    paymentYears: Int
+    startDate: DateTime
+    totalAmount: Float
+  ): Debt
   updateUser(
     birthday: Date
     gender: Gender

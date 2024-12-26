@@ -15,6 +15,9 @@ export { default as updateBudget } from "./budget/updateBudget";
 export { default as deleteBudget } from "./budget/deleteBudget";
 
 // 💸 Debt Mutations
+export { default as createDebt } from "./debt/createDebt";
+export { default as updateDebt } from "./debt/updateDebt";
+export { default as deleteDebt } from "./debt/deleteDebt";
 
 // 📊 Transaction Mutations
 
