@@ -119,6 +119,13 @@ type Mutation {
     outputModel: String
     outputModelId: String
   ): ActivityLog
+  createBudget(
+    amount: Float!
+    category: Category!
+    endDate: String!
+    name: String!
+  ): Budget
+  deleteBudget(budgetId: String!): Boolean
   login(email: String!, password: String!): LoginResponse
   registerUser(
     email: String!
@@ -128,6 +135,13 @@ type Mutation {
   renewToken: String
   requestResetPassword(email: String!): Boolean
   resetPasswordWithToken(newPassword: String!, token: String!): Boolean
+  updateBudget(
+    amount: Float
+    budgetId: String!
+    category: Category
+    endDate: Date
+    name: String
+  ): Budget
   updateUser(
     birthday: Date
     gender: Gender

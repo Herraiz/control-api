@@ -2,7 +2,6 @@ model Budget {
   id           String        @id @default(uuid())
   name         String
   amount       Float
-  // category enum defined in transaction.prisma
   category     Category
   endDate      DateTime
 
