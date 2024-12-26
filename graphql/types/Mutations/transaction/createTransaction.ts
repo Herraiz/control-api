@@ -78,7 +78,8 @@ export default mutationField("createTransaction", {
         ...(description && { description }),
         amount,
         type,
-        category,
+        // only add category if it's not an income
+        ...(type !== TransactionType.INCOME && { category }),
 
         ...(type === TransactionType.INCOME && incomeType
           ? { incomeType }
