@@ -1,0 +1,19 @@
+model Debt {
+  id           String        @id @default(uuid())
+  name         String
+  totalAmount  Float
+  interestRate Float
+  interestType InterestType
+  paymentYears Int
+  startDate    DateTime     @default(now())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+enum InterestType {
+  TIN
+  TAE
+} 

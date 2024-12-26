@@ -15,6 +15,44 @@ type ActivityLog {
   outputModelId: String
 }
 
+type Budget {
+  amount: Float!
+  balance: Float!
+  category: Category!
+  createdAt: DateTime
+  endDate: DateTime!
+  id: String!
+  name: String!
+  transactions: [Transaction]
+  updatedAt: DateTime
+  user: User!
+}
+
+enum Category {
+  CLOTHING
+  DEBT_PAYMENTS
+  EDUCATION
+  ENTERTAINMENT
+  FOOD_AND_GROCERIES
+  GIFTS_AND_DONATIONS
+  HEALTHCARE
+  HOUSING_AND_RENT
+  INSURANCE
+  MISCELLANEOUS
+  PERSONAL_CARE
+  RESTAURANTS_AND_DINING
+  SAVINGS_AND_INVESTMENTS
+  TAXES
+  TRANSPORTATION
+  TRAVEL
+  UTILITIES
+}
+
+enum Currency {
+  EUR
+  USD
+}
+
 """
 A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -25,10 +63,41 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type Debt {
+  createdAt: DateTime
+  id: String!
+  interestRate: Float!
+  interestType: InterestType!
+  name: String!
+  paymentYears: Int!
+  startDate: DateTime!
+  totalAmount: Float!
+  transactions: [Transaction]
+  updatedAt: DateTime
+  user: User!
+}
+
 enum Gender {
   FEMALE
   MALE
   NO_BINARY
+}
+
+enum IncomeType {
+  BUSINESS
+  FREELANCE
+  GIFTS
+  GOVERNMENT_BENEFITS
+  INVESTMENT
+  OTHER
+  PENSION
+  RENTAL
+  SALARY
+}
+
+enum InterestType {
+  TAE
+  TIN
 }
 
 """
@@ -55,6 +124,35 @@ type Mutation {
     outputModel: String
     outputModelId: String
   ): ActivityLog
+  changeUserPassword(newPassword: String!, userId: String!): Boolean
+  createBudget(
+    amount: Float!
+    category: Category!
+    endDate: DateTime!
+    name: String!
+  ): Budget
+  createDebt(
+    interestRate: Float!
+    interestType: InterestType!
+    name: String!
+    paymentYears: Int!
+    startDate: DateTime!
+    totalAmount: Float!
+  ): Debt
+  createTransaction(
+    amount: Float!
+    budgetId: String
+    category: Category!
+    date: DateTime!
+    debtId: String
+    description: String
+    incomeType: IncomeType
+    name: String!
+    type: TransactionType!
+  ): Transaction
+  deleteBudget(budgetId: String!): Boolean
+  deleteDebt(debtId: String!): Boolean
+  deleteTransaction(transactionId: String!): Boolean
   login(email: String!, password: String!): LoginResponse
   registerUser(
     email: String!
@@ -63,9 +161,39 @@ type Mutation {
   ): RegisterResponse
   renewToken: String
   requestResetPassword(email: String!): Boolean
+  requestUserDelete(password: String!): Boolean
   resetPasswordWithToken(newPassword: String!, token: String!): Boolean
+  updateBudget(
+    amount: Float
+    budgetId: String!
+    category: Category
+    endDate: DateTime
+    name: String
+  ): Budget
+  updateDebt(
+    debtId: String!
+    interestRate: Float
+    interestType: InterestType
+    name: String
+    paymentYears: Int
+    startDate: DateTime
+    totalAmount: Float
+  ): Debt
+  updateTransaction(
+    amount: Float
+    budgetId: String
+    category: Category
+    date: DateTime
+    debtId: String
+    description: String
+    incomeType: IncomeType
+    name: String
+    transactionId: String!
+    type: TransactionType
+  ): Transaction
   updateUser(
     birthday: Date
+    currency: Currency
     gender: Gender
     lastname: String
     name: String
@@ -75,6 +203,12 @@ type Mutation {
 
 type Query {
   _canDoAction(requiredPermissions: [String]!, userId: String!): Boolean
+  getBudget(budgetId: String!): Budget
+  getBudgets(userId: String!): [Budget]
+  getDebt(debtId: String!): Debt
+  getDebts(userId: String!): [Debt]
+  getTransaction(transactionId: String!): Transaction
+  getTransactions(userId: String!): [Transaction]
   me(appId: String): User
 }
 
@@ -83,9 +217,33 @@ type RegisterResponse {
   user: User
 }
 
+type Transaction {
+  amount: Float!
+  budget: Budget
+  category: Category
+  createdAt: DateTime
+  date: DateTime!
+  debt: Debt
+  description: String
+  id: String!
+  incomeType: IncomeType
+  name: String!
+  type: TransactionType!
+  updatedAt: DateTime
+  user: User!
+}
+
+enum TransactionType {
+  DEBT
+  EXPENSE
+  INCOME
+}
+
 type User {
   aclRole: UserRole
   birthday: Date
+  createdAt: DateTime
+  currency: Currency
   deletedAt: DateTime
   email: String
   gender: Gender
@@ -94,6 +252,7 @@ type User {
   name: String
   newsletterOptIn: Boolean
   status: UserStatus
+  updatedAt: DateTime
 }
 
 input UserCreateInput {

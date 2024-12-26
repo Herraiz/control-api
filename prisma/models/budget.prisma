@@ -1,0 +1,15 @@
+model Budget {
+  id           String        @id @default(uuid())
+  name         String
+  amount       Float
+  category     Category
+  endDate      DateTime
+
+  // Relations
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}

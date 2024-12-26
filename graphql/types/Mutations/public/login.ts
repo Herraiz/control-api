@@ -73,7 +73,6 @@ export default mutationField("login", {
 
     await ctx.prisma.loginLog.create({
       data: {
-        type: "NEW_TOKEN",
         userId: user.id,
         ip: ctx.meta.remoteAddress,
       },
