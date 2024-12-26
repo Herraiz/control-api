@@ -119,6 +119,7 @@ type Mutation {
     outputModel: String
     outputModelId: String
   ): ActivityLog
+  changeUserPassword(newPassword: String!, userId: String!): Boolean
   createBudget(
     amount: Float!
     category: Category!
@@ -134,6 +135,7 @@ type Mutation {
   ): RegisterResponse
   renewToken: String
   requestResetPassword(email: String!): Boolean
+  requestUserDelete(password: String!): Boolean
   resetPasswordWithToken(newPassword: String!, token: String!): Boolean
   updateBudget(
     amount: Float
