@@ -25,7 +25,7 @@ export default mutationField("deleteDebt", {
     });
 
     if (!debt) {
-      throw new ApolloError("Budget not found.", "BUDGET_NOT_FOUND");
+      throw new ApolloError("DEBT not found.", "DEBT_NOT_FOUND");
     }
 
     const debtIsDeleted = await ctx.prisma.debt.delete({
