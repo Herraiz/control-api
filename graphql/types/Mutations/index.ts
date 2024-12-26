@@ -20,6 +20,9 @@ export { default as updateDebt } from "./debt/updateDebt";
 export { default as deleteDebt } from "./debt/deleteDebt";
 
 // 📊 Transaction Mutations
+export { default as createTransaction } from "./transaction/createTransaction";
+export { default as updateTransaction } from "./transaction/updateTransaction";
+export { default as deleteTransaction } from "./transaction/deleteTransaction";
 
 // 👨‍💼 Admin Mutations
 export { default as changeUserPassword } from "./admin/changeUserPassword";
