@@ -140,8 +140,11 @@ type Mutation {
 type Query {
   _canDoAction(requiredPermissions: [String]!, userId: String!): Boolean
   getBudget(budgetId: String!): Budget
+  getBudgets(userId: String!): [Budget]
   getDebt(debtId: String!): Debt
+  getDebts(userId: String!): [Debt]
   getTransaction(transactionId: String!): Transaction
+  getTransactions(userId: String!): [Transaction]
   me(appId: String): User
 }
 
