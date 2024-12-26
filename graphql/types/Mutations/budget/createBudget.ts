@@ -8,7 +8,7 @@ export default mutationField("createBudget", {
     name: nonNull(stringArg()),
     amount: nonNull(floatArg()),
     category: nonNull(arg({ type: "Category" })),
-    endDate: nonNull(stringArg()),
+    endDate: nonNull(arg({ type: "DateTime" })),
   },
   authorize: authorizeFieldCurrentUser,
   async resolve(_root, { name, amount, category, endDate }, ctx) {
