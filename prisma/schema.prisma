@@ -62,7 +62,6 @@ model Budget {
   id       String   @id @default(uuid())
   name     String
   amount   Float
-  // category enum defined in transaction.prisma
   category Category
   endDate  DateTime
 
@@ -178,6 +177,7 @@ model User {
   lastname String?
   birthday DateTime?
   gender   Gender?
+  currency Currency  @default(EUR)
 
   // Privacy options
   newsletterOptIn Boolean @default(false)
@@ -188,7 +188,6 @@ model User {
   transactions Transaction[]
   budgets      Budget[]
   debts        Debt[]
-  settings     UserSettings?
 
   // Generic fields
   status UserStatus @default(ACTIVE)
@@ -196,15 +195,6 @@ model User {
   deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
-}
-
-model UserSettings {
-  id       String  @id @default(uuid())
-  userId   String  @unique
-  user     User    @relation(fields: [userId], references: [id])
-  currency String  @default("EUR")
-  language String  @default("en")
-  darkMode Boolean @default(false)
 }
 
 enum UserRole {
@@ -224,4 +214,9 @@ enum UserStatus {
   BANNED
   DELETED_BY_USER
   DELETED_BY_ADMIN
+}
+
+enum Currency {
+  EUR
+  USD
 }

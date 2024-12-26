@@ -6,7 +6,7 @@ export { default as resetPasswordWithToken } from "./public/resetPasswordWithTok
 
 // 👨‍💻 User Mutations
 export { default as renewToken } from "./user/renewToken";
-export { default as updateUser } from "./user/updateUser"; // TODO: Register ActivityLog
+export { default as updateUser } from "./user/updateUser";
 export { default as deleteUser } from "./user/requestUserDelete";
 
 // 💰 Budget Mutations

@@ -32,6 +32,10 @@ export default objectType({
       type: "Gender",
       authorize: authorizeFieldCurrentUser,
     });
+    t.nullable.field("currency", {
+      type: "Currency",
+      authorize: authorizeFieldCurrentUser,
+    });
     t.field("status", {
       type: "UserStatus",
       authorize: authorizeFieldCurrentUser,
