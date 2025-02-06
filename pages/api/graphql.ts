@@ -1,10 +1,8 @@
-import { Server as HTTPServer } from "http";
 import { ApolloServer } from "apollo-server-micro";
 import { NextApiRequest, NextApiResponse, PageConfig } from "next";
 import processRequest from "graphql-upload/processRequest.mjs";
 import { schema } from "@/graphql/schema";
 import { createContext } from "@/graphql/context";
-import { dynamicContext } from "@/graphql/dinamicContext";
 
 let serverCleanup: Disposable | null = null;
 const apolloServer = new ApolloServer({
@@ -28,7 +26,10 @@ const apolloServer = new ApolloServer({
 
 const startServer = apolloServer.start();
 
-const ALLOWED_HOST = ["https://studio.apollographql.com"];
+const ALLOWED_HOST = [
+  "https://studio.apollographql.com",
+  "http://localhost:4200",
+];
 
 export default async (
   req: Readonly<NextApiRequest>,
@@ -37,7 +38,7 @@ export default async (
   if (
     req.method !== "OPTIONS" &&
     process.env.NODE_ENV === "production" &&
-    req.headers["x-client"] !== process.env.GRAPHQL_API_GW_X_CLIENT
+    req.headers["x-client"] !== process.env.GRAPHQL_API_X_CLIENT
   ) {
     req.socket.destroy();
     return false;
