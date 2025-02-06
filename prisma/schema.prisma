@@ -197,6 +197,18 @@ model User {
   updatedAt DateTime  @default(now()) @updatedAt
 }
 
+model UserTimestampAction {
+  userId     String
+  actionType UserTimestampActionType
+  sendAt     DateTime                @default(now()) @updatedAt
+
+  @@unique([userId, actionType])
+}
+
+enum UserTimestampActionType {
+  RESET_PASSWORD
+}
+
 enum UserRole {
   USER
   ADMIN
