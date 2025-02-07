@@ -162,6 +162,7 @@ type Mutation {
   renewToken: String
   requestResetPassword(email: String!): Boolean
   requestUserDelete(password: String!): Boolean
+  resetPassword(newPassword: String!, oldPassword: String!): Boolean
   resetPasswordWithToken(newPassword: String!, token: String!): Boolean
   updateBudget(
     amount: Float
