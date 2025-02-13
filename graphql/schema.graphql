@@ -142,13 +142,14 @@ type Mutation {
   createTransaction(
     amount: Float!
     budgetId: String
-    category: Category!
+    category: Category
     date: DateTime!
     debtId: String
     description: String
     incomeType: IncomeType
     name: String!
     type: TransactionType!
+    userId: String!
   ): Transaction
   deleteBudget(budgetId: String!): Boolean
   deleteDebt(debtId: String!): Boolean

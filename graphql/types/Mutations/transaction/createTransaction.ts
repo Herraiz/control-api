@@ -1,17 +1,25 @@
-import { stringArg, mutationField, nonNull, arg, floatArg } from "nexus";
+import {
+  stringArg,
+  mutationField,
+  nonNull,
+  arg,
+  floatArg,
+  nullable,
+} from "nexus";
 import { ApolloError } from "apollo-server-micro";
-import { authorizeFieldCurrentUser } from "@/graphql/utils";
 import { TransactionType } from "@prisma/client";
+import { authorizeFieldCurrentUser } from "@/graphql/utils";
 
 export default mutationField("createTransaction", {
   type: "Transaction",
   args: {
+    userId: nonNull(stringArg()),
     name: nonNull(stringArg()),
     date: nonNull(arg({ type: "DateTime" })),
     description: stringArg(),
     amount: nonNull(floatArg()),
     type: nonNull(arg({ type: "TransactionType" })),
-    category: nonNull(arg({ type: "Category" })),
+    category: nullable(arg({ type: "Category" })),
     incomeType: arg({ type: "IncomeType" }),
     budgetId: stringArg(),
     debtId: stringArg(),
@@ -20,6 +28,7 @@ export default mutationField("createTransaction", {
   async resolve(
     _root,
     {
+      userId,
       name,
       date,
       description,
@@ -32,6 +41,10 @@ export default mutationField("createTransaction", {
     },
     ctx,
   ) {
+    if (userId !== ctx.user.id) {
+      throw new ApolloError("Unauthorized", "UNAUTHORIZED_NOT_SAME_USER");
+    }
+
     const user = await ctx.prisma.user.findUnique({
       where: {
         id: ctx.user.id,
@@ -69,6 +82,18 @@ export default mutationField("createTransaction", {
         throw new ApolloError("Invalid transaction type.", "INVALID_TYPE");
     }
 
+    // Ensure category is provided if type is not DEBT or INCOME
+    if (
+      type !== TransactionType.DEBT &&
+      type !== TransactionType.INCOME &&
+      !category
+    ) {
+      throw new ApolloError(
+        "Category is required for non-debt and non-income transactions.",
+        "CATEGORY_REQUIRED",
+      );
+    }
+
     // End of logics ###########
 
     const transaction = await ctx.prisma.transaction.create({
@@ -78,8 +103,9 @@ export default mutationField("createTransaction", {
         ...(description && { description }),
         amount,
         type,
-        // only add category if it's not an income
-        ...(type !== TransactionType.INCOME && { category }),
+
+        ...(type !== TransactionType.DEBT &&
+          type !== TransactionType.INCOME && { category }),
 
         ...(type === TransactionType.INCOME && incomeType
           ? { incomeType }
