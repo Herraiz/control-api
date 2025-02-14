@@ -153,7 +153,7 @@ type Mutation {
   ): Transaction
   deleteBudget(budgetId: String!): Boolean
   deleteDebt(debtId: String!): Boolean
-  deleteTransaction(transactionId: String!): Boolean
+  deleteTransaction(transactionId: String!, userId: String!): Boolean
   login(email: String!, password: String!): LoginResponse
   registerUser(
     email: String!
@@ -192,6 +192,7 @@ type Mutation {
     name: String
     transactionId: String!
     type: TransactionType
+    userId: String!
   ): Transaction
   updateUser(
     birthday: Date
@@ -210,7 +211,7 @@ type Query {
   getDebt(debtId: String!): Debt
   getDebts(userId: String!): [Debt]
   getTransaction(transactionId: String!): Transaction
-  getTransactions(userId: String!): [Transaction]
+  getTransactions(orderBy: String = "asc", userId: String!): [Transaction]
   me(appId: String): User
 }
 
