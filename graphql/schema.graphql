@@ -70,6 +70,7 @@ type Debt {
   interestType: InterestType!
   name: String!
   paymentYears: Int!
+  remainingAmount: Float
   startDate: DateTime!
   totalAmount: Float!
   transactions: [Transaction]
