@@ -211,7 +211,12 @@ type Query {
   getDebt(debtId: String!): Debt
   getDebts(userId: String!): [Debt]
   getTransaction(transactionId: String!): Transaction
-  getTransactions(orderBy: String = "asc", userId: String!): [Transaction]
+  getTransactions(
+    limit: Int = 25
+    offset: Int = 0
+    orderBy: String = "asc"
+    userId: String!
+  ): [Transaction]
   me(appId: String): User
 }
 
