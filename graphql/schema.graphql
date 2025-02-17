@@ -66,13 +66,16 @@ scalar DateTime
 type Debt {
   createdAt: DateTime
   id: String!
+  interestAmount: Float
   interestRate: Float!
   interestType: InterestType!
   name: String!
   paymentYears: Int!
-  remainingAmount: Float
+  remainingDebt: Float
   startDate: DateTime!
   totalAmount: Float!
+  totalDebtAmount: Float
+  totalPaidAmount: Float
   transactions: [Transaction]
   updatedAt: DateTime
   user: User!
