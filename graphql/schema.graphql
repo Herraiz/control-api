@@ -214,7 +214,7 @@ type Query {
   _canDoAction(requiredPermissions: [String]!, userId: String!): Boolean
   getBudget(budgetId: String!): Budget
   getBudgets(userId: String!): [Budget]
-  getDebt(debtId: String!): Debt
+  getDebt(debtId: String!, userId: String!): Debt
   getDebts(userId: String!): [Debt]
   getTransaction(transactionId: String!): Transaction
   getTransactions(
