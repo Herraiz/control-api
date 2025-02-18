@@ -142,6 +142,7 @@ type Mutation {
     paymentYears: Int!
     startDate: DateTime!
     totalAmount: Float!
+    userId: String!
   ): Debt
   createTransaction(
     amount: Float!
@@ -156,7 +157,7 @@ type Mutation {
     userId: String!
   ): Transaction
   deleteBudget(budgetId: String!): Boolean
-  deleteDebt(debtId: String!): Boolean
+  deleteDebt(debtId: String!, userId: String!): Boolean
   deleteTransaction(transactionId: String!, userId: String!): Boolean
   login(email: String!, password: String!): LoginResponse
   registerUser(
@@ -184,6 +185,7 @@ type Mutation {
     paymentYears: Int
     startDate: DateTime
     totalAmount: Float
+    userId: String!
   ): Debt
   updateTransaction(
     amount: Float

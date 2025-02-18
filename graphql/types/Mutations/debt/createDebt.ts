@@ -12,6 +12,7 @@ import { authorizeFieldCurrentUser } from "@/graphql/utils";
 export default mutationField("createDebt", {
   type: "Debt",
   args: {
+    userId: nonNull(stringArg()),
     name: nonNull(stringArg()),
     totalAmount: nonNull(floatArg()),
     interestRate: nonNull(floatArg()),
@@ -22,9 +23,21 @@ export default mutationField("createDebt", {
   authorize: authorizeFieldCurrentUser,
   async resolve(
     _root,
-    { name, totalAmount, interestRate, interestType, paymentYears, startDate },
+    {
+      userId,
+      name,
+      totalAmount,
+      interestRate,
+      interestType,
+      paymentYears,
+      startDate,
+    },
     ctx,
   ) {
+    if (userId !== ctx.user.id) {
+      throw new ApolloError("Unauthorized", "UNAUTHORIZED_NOT_SAME_USER");
+    }
+
     const user = await ctx.prisma.user.findUnique({
       where: {
         id: ctx.user.id,
