@@ -89,6 +89,11 @@ type Debt {
   user: User!
 }
 
+type ExpensesByCategory {
+  category: Category!
+  total: Float!
+}
+
 enum Gender {
   FEMALE
   MALE
@@ -220,6 +225,11 @@ type Query {
   getBudgets(month: Int, userId: String!, year: Int): [Budget]
   getDebt(debtId: String!, userId: String!): Debt
   getDebts(userId: String!): [Debt]
+  getExpensesByCategory(
+    month: Int!
+    userId: String!
+    year: Int!
+  ): [ExpensesByCategory]
   getTransaction(transactionId: String!): Transaction
   getTransactions(
     limit: Int = 25

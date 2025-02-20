@@ -15,5 +15,8 @@ export { default as getDebts } from "./debt/getDebts";
 export { default as getTransaction } from "./transaction/getTransaction";
 export { default as getTransactions } from "./transaction/getTransactions";
 
+// Report Queries
+export { default as getExpensesByCategory } from "./reports/getExpensesByCategory";
+
 // Private Queries
 export { default as _canDoAction } from "./_canDoAction";
