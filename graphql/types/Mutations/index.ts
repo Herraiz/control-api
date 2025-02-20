@@ -12,7 +12,6 @@ export { default as resetPassword } from "./user/resetPassword";
 
 // 💰 Budget Mutations
 export { default as createBudget } from "./budget/createBudget";
-export { default as updateBudget } from "./budget/updateBudget";
 export { default as deleteBudget } from "./budget/deleteBudget";
 
 // 💸 Debt Mutations

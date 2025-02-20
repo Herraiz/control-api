@@ -15,17 +15,25 @@ type ActivityLog {
   outputModelId: String
 }
 
+type AvailableBudgetDates {
+  months: [Int]!
+  year: Int!
+}
+
 type Budget {
   amount: Float!
-  balance: Float!
+  balance(month: Int, year: Int): Float
   category: Category!
   createdAt: DateTime
-  endDate: DateTime!
   id: String!
+  isRecurring: Boolean!
+  month: Int
   name: String!
-  transactions: [Transaction]
+  recurringStartDate: DateTime
+  transactions(month: Int, year: Int): [Transaction]
   updatedAt: DateTime
   user: User!
+  year: Int
 }
 
 enum Category {
@@ -132,8 +140,10 @@ type Mutation {
   createBudget(
     amount: Float!
     category: Category!
-    endDate: DateTime!
+    isRecurring: Boolean!
     name: String!
+    recurringStartDate: DateTime
+    userId: String!
   ): Budget
   createDebt(
     interestRate: Float!
@@ -156,7 +166,7 @@ type Mutation {
     type: TransactionType!
     userId: String!
   ): Transaction
-  deleteBudget(budgetId: String!): Boolean
+  deleteBudget(budgetId: String!, userId: String!): Boolean
   deleteDebt(debtId: String!, userId: String!): Boolean
   deleteTransaction(transactionId: String!, userId: String!): Boolean
   login(email: String!, password: String!): LoginResponse
@@ -170,13 +180,6 @@ type Mutation {
   requestUserDelete(password: String!): Boolean
   resetPassword(newPassword: String!, oldPassword: String!): Boolean
   resetPasswordWithToken(newPassword: String!, token: String!): Boolean
-  updateBudget(
-    amount: Float
-    budgetId: String!
-    category: Category
-    endDate: DateTime
-    name: String
-  ): Budget
   updateDebt(
     debtId: String!
     interestRate: Float
@@ -212,8 +215,9 @@ type Mutation {
 
 type Query {
   _canDoAction(requiredPermissions: [String]!, userId: String!): Boolean
-  getBudget(budgetId: String!): Budget
-  getBudgets(userId: String!): [Budget]
+  getAvailableBudgetDates(userId: String!): [AvailableBudgetDates]
+  getBudget(budgetId: String!, month: Int, userId: String!, year: Int): Budget
+  getBudgets(month: Int, userId: String!, year: Int): [Budget]
   getDebt(debtId: String!, userId: String!): Debt
   getDebts(userId: String!): [Debt]
   getTransaction(transactionId: String!): Transaction
@@ -241,10 +245,12 @@ type Transaction {
   description: String
   id: String!
   incomeType: IncomeType
+  month: Int!
   name: String!
   type: TransactionType!
   updatedAt: DateTime
   user: User!
+  year: Int!
 }
 
 enum TransactionType {

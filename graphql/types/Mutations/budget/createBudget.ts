@@ -1,31 +1,39 @@
-import { stringArg, mutationField, nonNull, arg, floatArg } from "nexus";
+import {
+  stringArg,
+  mutationField,
+  nonNull,
+  arg,
+  floatArg,
+  booleanArg,
+  nullable,
+} from "nexus";
 import { ApolloError } from "apollo-server-micro";
 import { authorizeFieldCurrentUser } from "@/graphql/utils";
 
 export default mutationField("createBudget", {
   type: "Budget",
   args: {
+    userId: nonNull(stringArg()),
     name: nonNull(stringArg()),
     amount: nonNull(floatArg()),
     category: nonNull(arg({ type: "Category" })),
-    endDate: nonNull(arg({ type: "DateTime" })),
+    isRecurring: nonNull(booleanArg()),
+    recurringStartDate: nullable(arg({ type: "DateTime" })),
   },
   authorize: authorizeFieldCurrentUser,
-  async resolve(_root, { name, amount, category, endDate }, ctx) {
-    const user = await ctx.prisma.user.findUnique({
-      where: {
-        id: ctx.user.id,
-      },
-    });
-    if (!user) {
-      throw new ApolloError("User not found.", "USER_NOT_FOUND");
+  async resolve(
+    _root,
+    { userId, name, amount, category, isRecurring, recurringStartDate },
+    ctx,
+  ) {
+    if (userId !== ctx.user.id) {
+      throw new ApolloError("Unauthorized", "UNAUTHORIZED_NOT_SAME_USER");
     }
 
-    // Ensure that the endDate is not in the past
-    if (new Date(endDate) < new Date()) {
+    if (isRecurring && !recurringStartDate) {
       throw new ApolloError(
-        "End date must be in the future.",
-        "END_DATE_INVALID",
+        "Recurring budgets must have a recurringStartDate.",
+        "MISSING_RECURRING_START_DATE",
       );
     }
 
@@ -34,31 +42,26 @@ export default mutationField("createBudget", {
         name,
         amount,
         category,
-        endDate: new Date(endDate),
+        isRecurring,
+        recurringStartDate: isRecurring ? new Date(recurringStartDate) : null,
         user: {
-          connect: {
-            id: ctx.user.id,
-          },
+          connect: { id: userId },
         },
       },
     });
 
-    if (budget) {
-      // Create ActivityLog
-      await ctx.prisma.activityLog.create({
-        data: {
-          inputModel: "USER",
-          inputModelId: user.id,
-          outputModel: "BUDGET",
-          outputModelId: budget.id,
-          action: "CREATE_BUDGET",
-          actorId: user.id,
-          message: `User created budget: ${budget.name} with id: ${budget.id}`,
-        },
-      });
+    await ctx.prisma.activityLog.create({
+      data: {
+        inputModel: "USER",
+        inputModelId: userId,
+        outputModel: "BUDGET",
+        outputModelId: budget.id,
+        action: "CREATE_BUDGET",
+        actorId: userId,
+        message: `User created budget: ${budget.name} with id: ${budget.id}`,
+      },
+    });
 
-      return budget;
-    }
-    return null;
+    return budget;
   },
 });

@@ -6,6 +6,16 @@ export default objectType({
     t.nonNull.string("id");
     t.nonNull.string("name");
     t.nonNull.dateTime("date");
+    t.nonNull.int("month", {
+      resolve: async (parent, _args, ctx) => {
+        return new Date(parent.date).getMonth() + 1;
+      },
+    });
+    t.nonNull.int("year", {
+      resolve: async (parent, _args, ctx) => {
+        return new Date(parent.date).getFullYear();
+      },
+    });
     t.nullable.string("description");
     t.nonNull.float("amount");
     t.nonNull.field("type", {

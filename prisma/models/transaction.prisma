@@ -44,7 +44,7 @@ enum Category {
   TAXES
   DEBT_PAYMENTS
   MISCELLANEOUS
-}
+  }
 
 enum IncomeType {
   SALARY
