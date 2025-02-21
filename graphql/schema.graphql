@@ -36,6 +36,12 @@ type Budget {
   year: Int
 }
 
+type BudgetExpensesControl {
+  amount: Float!
+  expenses: Float!
+  month: Int!
+}
+
 type CashFlow {
   expenses: Float!
   incomes: Float!
@@ -228,6 +234,10 @@ type Query {
   _canDoAction(requiredPermissions: [String]!, userId: String!): Boolean
   getAvailableBudgetDates(userId: String!): [AvailableBudgetDates]
   getBudget(budgetId: String!, month: Int, userId: String!, year: Int): Budget
+  getBudgetExpensesControl(
+    budgetId: String!
+    userId: String!
+  ): [BudgetExpensesControl]
   getBudgets(month: Int, userId: String!, year: Int): [Budget]
   getCashFlow(userId: String!): [CashFlow]
   getDebt(debtId: String!, userId: String!): Debt
