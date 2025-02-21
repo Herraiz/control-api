@@ -10,3 +10,4 @@ export { default as AvailableBudgetDates } from "./AvailableBudgetDates";
 
 // Reports
 export { default as ExpensesByCategory } from "./ExpensesByCategory";
+export { default as CashFlow } from "./CashFlow";

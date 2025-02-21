@@ -36,6 +36,12 @@ type Budget {
   year: Int
 }
 
+type CashFlow {
+  expenses: Float!
+  incomes: Float!
+  month: Int!
+}
+
 enum Category {
   CLOTHING
   DEBT_PAYMENTS
@@ -223,6 +229,7 @@ type Query {
   getAvailableBudgetDates(userId: String!): [AvailableBudgetDates]
   getBudget(budgetId: String!, month: Int, userId: String!, year: Int): Budget
   getBudgets(month: Int, userId: String!, year: Int): [Budget]
+  getCashFlow(userId: String!): [CashFlow]
   getDebt(debtId: String!, userId: String!): Debt
   getDebts(userId: String!): [Debt]
   getExpensesByCategory(
