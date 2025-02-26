@@ -101,6 +101,12 @@ type Debt {
   user: User!
 }
 
+type DebtControl {
+  actualAmount: Float!
+  estimatedAmount: Float!
+  year: Int
+}
+
 type ExpensesByCategory {
   category: Category!
   total: Float!
@@ -241,6 +247,7 @@ type Query {
   getBudgets(month: Int, userId: String!, year: Int): [Budget]
   getCashFlow(userId: String!): [CashFlow]
   getDebt(debtId: String!, userId: String!): Debt
+  getDebtControl(debtId: String!, userId: String!): [DebtControl]
   getDebts(userId: String!): [Debt]
   getExpensesByCategory(
     month: Int!

@@ -19,6 +19,7 @@ export { default as getTransactions } from "./transaction/getTransactions";
 export { default as getExpensesByCategory } from "./reports/getExpensesByCategory";
 export { default as getCashFlow } from "./reports/getCashFlow";
 export { default as getBudgetExpensesControl } from "./reports/getBudgetExpensesControl";
+export { default as getDebtControl } from "./reports/getDebtControl";
 
 // Private Queries
 export { default as _canDoAction } from "./_canDoAction";
