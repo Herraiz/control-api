@@ -33,8 +33,9 @@ export default queryField("getDebtControl", {
     const actualPayments: Record<number, number> = {};
 
     let accumulatedActualPayments = 0;
+    let lastYearWithPayments = startYear;
 
-    // Primer bucle: calcular pagos acumulados año a año
+    // **Primer bucle: calcular pagos acumulados año a año**
     for (let year = startYear; year <= endYear; year++) {
       const transactions = await ctx.prisma.transaction.findMany({
         where: {
@@ -53,24 +54,31 @@ export default queryField("getDebtControl", {
 
       accumulatedActualPayments += yearlyPayment;
       actualPayments[year] = accumulatedActualPayments;
+
+      if (yearlyPayment > 0) {
+        lastYearWithPayments = year; // **Actualizamos el último año con pagos reales**
+      }
     }
 
-    // Segundo bucle: calcular estimado y estructurar la respuesta
+    // **Segundo bucle: calcular estimado y estructurar la respuesta**
     let remainingEstimated = totalDebt;
 
     for (let year = startYear; year <= endYear; year++) {
       remainingEstimated -= annualPaymentEstimate;
       remainingEstimated = Math.max(remainingEstimated, 0);
 
-      const remainingActual = Math.max(
-        totalDebt - (actualPayments[year] || 0),
-        0,
-      );
+      const remainingActual =
+        year <= lastYearWithPayments
+          ? Math.max(totalDebt - (actualPayments[year] || 0), 0)
+          : null; // **Después del último año con pagos, enviamos null**
 
       debtControlData.push({
         year,
         estimatedAmount: parseFloat(remainingEstimated.toFixed(2)),
-        actualAmount: parseFloat(remainingActual.toFixed(2)),
+        actualAmount:
+          remainingActual !== null
+            ? parseFloat(remainingActual.toFixed(2))
+            : null,
       });
     }
 

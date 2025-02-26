@@ -102,7 +102,7 @@ type Debt {
 }
 
 type DebtControl {
-  actualAmount: Float!
+  actualAmount: Float
   estimatedAmount: Float!
   year: Int
 }

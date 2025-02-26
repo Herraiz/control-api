@@ -5,6 +5,6 @@ export default objectType({
   definition(t) {
     t.nullable.int("year");
     t.nonNull.float("estimatedAmount");
-    t.nonNull.float("actualAmount");
+    t.nullable.float("actualAmount");
   },
 });
