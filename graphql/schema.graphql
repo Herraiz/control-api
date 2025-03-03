@@ -257,10 +257,12 @@ type Query {
   getTransaction(transactionId: String!): Transaction
   getTransactions(
     limit: Int = 25
-    offset: Int = 0
     orderBy: String = "asc"
+    page: Int = 0
+    searchTerm: String
+    type: TransactionType
     userId: String!
-  ): [Transaction]
+  ): TransactionsResponse
   me(appId: String): User
 }
 
@@ -291,6 +293,12 @@ enum TransactionType {
   DEBT
   EXPENSE
   INCOME
+}
+
+type TransactionsResponse {
+  pageSize: Int!
+  totalCount: Int!
+  transactions: [Transaction]
 }
 
 type User {

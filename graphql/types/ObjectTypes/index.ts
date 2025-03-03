@@ -6,6 +6,7 @@ export { default as ActivityLog } from "./ActivityLog";
 export { default as Budget } from "./Budget";
 export { default as Debt } from "./Debt";
 export { default as Transaction } from "./Transaction";
+export { default as TransactionsResponse } from "./TransactionsResponse";
 export { default as AvailableBudgetDates } from "./AvailableBudgetDates";
 
 // Reports
