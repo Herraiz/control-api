@@ -34,6 +34,11 @@ export default queryField("getExpensesByCategory", {
       _sum: {
         amount: true,
       },
+      orderBy: {
+        _sum: {
+          amount: "desc",
+        },
+      },
     });
 
     return expenses.map((expense) => ({
