@@ -245,7 +245,7 @@ type Query {
     userId: String!
   ): [BudgetExpensesControl]
   getBudgets(month: Int, userId: String!, year: Int): [Budget]
-  getCashFlow(userId: String!): [CashFlow]
+  getCashFlow(month: String, userId: String!, year: String): [CashFlow]
   getDebt(debtId: String!, userId: String!): Debt
   getDebtControl(debtId: String!, userId: String!): [DebtControl]
   getDebts(userId: String!): [Debt]
