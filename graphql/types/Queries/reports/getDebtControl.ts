@@ -61,16 +61,20 @@ export default queryField("getDebtControl", {
     }
 
     // **Segundo bucle: calcular estimado y estructurar la respuesta**
-    let remainingEstimated = totalDebt;
+    let remainingEstimated = 0;
 
     for (let year = startYear; year <= endYear; year++) {
-      remainingEstimated -= annualPaymentEstimate;
-      remainingEstimated = Math.max(remainingEstimated, 0);
+      if (year === startYear) {
+        remainingEstimated = totalDebt; // El primer año muestra el monto total de la deuda
+      } else {
+        remainingEstimated -= annualPaymentEstimate;
+        remainingEstimated = Math.max(remainingEstimated, 0);
+      }
 
       const remainingActual =
         year <= lastYearWithPayments
           ? Math.max(totalDebt - (actualPayments[year] || 0), 0)
-          : null; // **Después del último año con pagos, enviamos null**
+          : null; // Después del último año con pagos, enviamos null
 
       debtControlData.push({
         year,
