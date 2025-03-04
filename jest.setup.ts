@@ -120,5 +120,5 @@ global.prisma = prisma;
 // Mock prettier to avoid the dynamic import error
 jest.mock('prettier', () => ({
 format: jest.fn(code => code),
-resolveConfig: jest.fn().mockResolvedValue({}),
+resolveConfig: jest.fn().mockImplementation(() => Promise.resolve({}))
 }));

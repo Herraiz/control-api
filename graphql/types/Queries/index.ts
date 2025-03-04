@@ -1,5 +1,6 @@
 // User Queries
 export { default as me } from "./user/me";
+export { default as getAlerts } from "./user/getAlerts";
 
 // Budget Queries
 

@@ -7,4 +7,6 @@ export { default as Category } from "./Category";
 export { default as TransactionType } from "./TransactionType";
 export { default as IncomeType } from "./IncomeType";
 
+export { default as AlertType } from "./AlertType";
+
 export { default as InterestType } from "./InterestType";

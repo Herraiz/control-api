@@ -18,7 +18,7 @@ export function createTestContext(): Context {
     aclRole: UserRole.USER,
     name: "Test User",
     lastname: "Test Lastname",
-    birthdate: new Date("1990-01-01"),
+    birthday: new Date("1990-01-01"),
     gender: Gender.FEMALE,
     currency: Currency.EUR,
 
