@@ -32,10 +32,19 @@ export default queryField("getBudgetExpensesControl", {
       const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
 
+      // TODO: Actualmente, aunque se sumen gastos y deudas, las deudas aún no se pueden vincular a un prespuesto.
       const expenses = await ctx.prisma.transaction.aggregate({
         where: {
           userId,
           budgetId,
+          OR: [
+            {
+              type: "EXPENSE",
+            },
+            {
+              type: "DEBT",
+            },
+          ],
           date: {
             gte: monthStart,
             lt: monthEnd,

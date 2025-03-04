@@ -21,6 +21,7 @@ export default queryField("getExpensesByCategory", {
     const nextYear = month === 12 ? year + 1 : year;
     const endDate = new Date(nextYear, nextMonth - 1, 1);
 
+    // TODO: Faltaría hacer el or en el type para que también se consideren las deudas, pero como éstas no pueden tener categoría en el front, no se consideran por ahora
     const expenses = await ctx.prisma.transaction.groupBy({
       by: ["category"],
       where: {

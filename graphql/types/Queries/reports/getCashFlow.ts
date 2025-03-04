@@ -26,7 +26,14 @@ export default queryField("getCashFlow", {
       const expenses = await ctx.prisma.transaction.aggregate({
         where: {
           userId,
-          type: "EXPENSE",
+          OR: [
+            {
+              type: "EXPENSE",
+            },
+            {
+              type: "DEBT",
+            },
+          ],
           date: {
             gte: monthStart,
             lt: monthEnd,
@@ -67,7 +74,14 @@ export default queryField("getCashFlow", {
       const expenses = await ctx.prisma.transaction.aggregate({
         where: {
           userId,
-          type: "EXPENSE",
+          OR: [
+            {
+              type: "EXPENSE",
+            },
+            {
+              type: "DEBT",
+            },
+          ],
           date: {
             gte: monthStart,
             lt: monthEnd,
