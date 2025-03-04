@@ -43,6 +43,9 @@ export default queryField("getBudgets", {
           },
         ],
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
   },
 });

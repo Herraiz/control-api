@@ -19,6 +19,9 @@ export default queryField("getDebts", {
       where: {
         userId,
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
   },
 });
