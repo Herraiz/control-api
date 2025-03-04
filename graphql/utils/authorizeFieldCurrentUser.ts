@@ -10,7 +10,7 @@ export default function authorizeFieldCurrentUser(
     return false;
   }
 
-  if ([UserRole.ADMIN].includes(ctx.user.aclRole)) {
+  if (ctx.user.aclRole === UserRole.ADMIN) {
     return true;
   }
 

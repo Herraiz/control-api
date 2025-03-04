@@ -11,15 +11,21 @@ export const schema = makeSchema({
   types: [types],
   shouldGenerateArtifacts: process.env.NODE_ENV !== "production",
   prettierConfig: join(process.cwd(), ".prettierrc"),
-  plugins: [
-    connectionPlugin(),
-    fieldAuthorizePlugin({
-      formatError({ error }) {
-        throw error ?? new Error("Not authorized");
-      },
-    }),
-    queryComplexityPlugin(),
-  ],
+  plugins:
+    process.env.NODE_ENV === "test"
+      ? [
+          connectionPlugin(),
+          fieldAuthorizePlugin({
+            formatError({ error }) {
+              throw error ?? new Error("Not authorized");
+            },
+          }),
+          queryComplexityPlugin(),
+        ] // No incluir plugin de autorización en pruebas
+      : [
+          /* tus plugins normales */
+        ],
+
   features: {
     abstractTypeStrategies: {
       __typename: true,

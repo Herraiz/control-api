@@ -26,9 +26,20 @@ export async function subscribeUser(
     });
 }
 export async function unSubscribeUser(email: string): Promise<void> {
-  const user = await mailjetClient.get("contact").id(email).request();
+const user = await mailjetClient.get("contact").id(email).request();
 
-  await fetch(`https://api.mailjet.com/v4/contacts/${user.body.Data[0].ID}`, {
+// Type guard to ensure body has the expected structure
+if (
+    typeof user.body !== 'object' || 
+    !user.body || 
+    !Array.isArray(user.body.Data) || 
+    user.body.Data.length === 0 ||
+    !user.body.Data[0].ID
+) {
+    throw new Error(`Unable to find contact with email: ${email}`);
+}
+
+await fetch(`https://api.mailjet.com/v4/contacts/${user.body.Data[0].ID}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

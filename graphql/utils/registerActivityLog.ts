@@ -50,7 +50,7 @@ export default async function registerActivityLog<A extends keyof Actions>(
         errorMessage,
         message,
         actorId: ctx.user.id,
-        source: ctx.meta.source?.replace("@", "") || "Control",
+        source: (ctx.meta.source ?? "Control").replace("@", ""),
       },
     });
 
