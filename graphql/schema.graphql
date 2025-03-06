@@ -194,7 +194,7 @@ type Query {
   getDebts(userId: String!): [Debt]
   getExpensesByCategory(month: Int!, userId: String!, year: Int!): [ExpensesByCategory]
   getTransaction(transactionId: String!): Transaction
-  getTransactionClassification(transactionText: String!, userId: String!): Transaction
+  getTransactionClassification(transactionText: String!, userId: String!): TransactionClassification
   getTransactions(limit: Int = 25, orderBy: String = "asc", page: Int = 0, searchTerm: String, type: TransactionType, userId: String!): TransactionsResponse
   me(appId: String): User
 }
@@ -220,6 +220,18 @@ type Transaction {
   updatedAt: DateTime
   user: User!
   year: Int!
+}
+
+type TransactionClassification {
+  amount: Float!
+  budgetId: String
+  category: Category
+  date: DateTime!
+  debtId: String
+  description: String
+  incomeType: IncomeType
+  name: String!
+  type: TransactionType!
 }
 
 enum TransactionType {
