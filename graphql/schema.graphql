@@ -194,6 +194,7 @@ type Query {
   getDebts(userId: String!): [Debt]
   getExpensesByCategory(month: Int!, userId: String!, year: Int!): [ExpensesByCategory]
   getTransaction(transactionId: String!): Transaction
+  getTransactionClassification(transactionText: String!, userId: String!): Transaction
   getTransactions(limit: Int = 25, orderBy: String = "asc", page: Int = 0, searchTerm: String, type: TransactionType, userId: String!): TransactionsResponse
   me(appId: String): User
 }
