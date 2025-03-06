@@ -1,55 +1,41 @@
-import { stringArg, mutationField, nonNull, arg, floatArg } from "nexus";
+import { stringArg, mutationField, nonNull } from "nexus";
 import { ApolloError } from "apollo-server-micro";
 import { authorizeFieldCurrentUser } from "@/graphql/utils";
 
 export default mutationField("deleteBudget", {
   type: "Boolean",
   args: {
+    userId: nonNull(stringArg()),
     budgetId: nonNull(stringArg()),
   },
   authorize: authorizeFieldCurrentUser,
-  async resolve(_root, { budgetId }, ctx) {
-    const user = await ctx.prisma.user.findUnique({
-      where: {
-        id: ctx.user.id,
-      },
-    });
-    if (!user) {
-      throw new ApolloError("User not found.", "USER_NOT_FOUND");
+  async resolve(_root, { userId, budgetId }, ctx) {
+    if (userId !== ctx.user.id) {
+      throw new ApolloError("Unauthorized", "UNAUTHORIZED_NOT_SAME_USER");
     }
 
     const budget = await ctx.prisma.budget.findUnique({
-      where: {
-        id: budgetId,
-      },
+      where: { id: budgetId },
     });
 
     if (!budget) {
       throw new ApolloError("Budget not found.", "BUDGET_NOT_FOUND");
     }
 
-    const budgetIsDeleted = await ctx.prisma.budget.delete({
-      where: {
-        id: budgetId,
+    await ctx.prisma.budget.delete({ where: { id: budgetId } });
+
+    await ctx.prisma.activityLog.create({
+      data: {
+        inputModel: "USER",
+        inputModelId: userId,
+        outputModel: "BUDGET",
+        outputModelId: budgetId,
+        action: "DELETE_BUDGET",
+        actorId: userId,
+        message: `User deleted budget: ${budget.name} with id: ${budget.id}`,
       },
     });
 
-    if (budgetIsDeleted) {
-      // Create ActivityLog
-      await ctx.prisma.activityLog.create({
-        data: {
-          inputModel: "USER",
-          inputModelId: user.id,
-          outputModel: "BUDGET",
-          outputModelId: budget.id,
-          action: "DELETE_BUDGET",
-          actorId: user.id,
-          message: `User deleted budget: ${budget.name} with id: ${budget.id}`,
-        },
-      });
-
-      return true;
-    }
-    return false;
+    return true;
   },
 });

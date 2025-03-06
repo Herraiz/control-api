@@ -16,6 +16,7 @@ export default mutationField("updateTransaction", {
     incomeType: arg({ type: "IncomeType" }),
     budgetId: stringArg(),
     debtId: stringArg(),
+    userId: nonNull(stringArg()),
   },
   authorize: authorizeFieldCurrentUser,
   async resolve(
@@ -31,6 +32,7 @@ export default mutationField("updateTransaction", {
       incomeType,
       budgetId,
       debtId,
+      userId,
     },
     ctx,
   ) {
@@ -79,12 +81,10 @@ export default mutationField("updateTransaction", {
     }
 
     // Logic of debts, expenses and incomes ###########
-
     switch (type) {
       case TransactionType.EXPENSE:
         // can have a budget or not
         break;
-
       case TransactionType.INCOME:
         // incomeType is mandatory
         if (!incomeType) {
@@ -94,18 +94,15 @@ export default mutationField("updateTransaction", {
           );
         }
         break;
-
       case TransactionType.DEBT:
         // debtId is mandatory
         if (!debtId) {
           throw new ApolloError("Debt is required for debts.", "DEBT_REQUIRED");
         }
         break;
-
       default:
         throw new ApolloError("Invalid transaction type.", "INVALID_TYPE");
     }
-
     // End of logics ###########
 
     // Prepare to update Data
@@ -126,8 +123,7 @@ export default mutationField("updateTransaction", {
       ...(date && { date }),
       ...(description && { description }),
       ...(amount && { amount }),
-      // only add category if it's not an income
-      ...(type && type !== TransactionType.INCOME && { type }),
+      ...(type && { type }),
       ...(type !== TransactionType.INCOME && { category }),
       ...(category && { category }),
     };
@@ -177,7 +173,6 @@ export default mutationField("updateTransaction", {
             message: `User updated transaction: ${transaction.name} with id: ${transaction.id}`,
           },
         });
-
         return transaction;
       }
     } catch (error) {

@@ -6,23 +6,24 @@ export default function authorizeFieldCurrentUser(
   args: Partial<Record<"userId", string>>,
   ctx: Context,
 ): boolean {
-  if (ctx.meta?.source === "@Bennu-Events") {
+  if (!ctx.user) {
+    return false;
+  }
+
+  if (ctx.user.aclRole === UserRole.ADMIN) {
     return true;
   }
 
-  if ([UserRole.ADMIN].includes(ctx.user.aclRole!)) {
-    return true;
+  if (target && "userId" in target) {
+    return target.userId === ctx.user.id;
   }
 
-  if ("userId" in target) {
-    return target.userId === ctx.user?.id;
+  if (target && "id" in target) {
+    return target.id === ctx.user.id;
   }
 
-  if ("id" in target) {
-    return target.id === ctx.user?.id;
-  }
-  if ("userId" in args) {
-    return args.userId === ctx.user?.id;
+  if (args && "userId" in args) {
+    return args.userId === ctx.user.id;
   }
 
   return false;

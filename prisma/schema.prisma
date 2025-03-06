@@ -59,13 +59,14 @@ model LoginLog {
 //
 
 model Budget {
-  id       String   @id @default(uuid())
-  name     String
-  amount   Float
-  category Category
-  endDate  DateTime
+  id                 String    @id @default(uuid())
+  name               String
+  amount             Float
+  category           Category
+  isRecurring        Boolean   @default(false)
+  recurringStartDate DateTime?
 
-  // Relations
+  // Relaciones
   userId       String
   user         User          @relation(fields: [userId], references: [id])
   transactions Transaction[]
@@ -195,6 +196,18 @@ model User {
   deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
+}
+
+model UserTimestampAction {
+  userId     String
+  actionType UserTimestampActionType
+  sendAt     DateTime                @default(now()) @updatedAt
+
+  @@unique([userId, actionType])
+}
+
+enum UserTimestampActionType {
+  RESET_PASSWORD
 }
 
 enum UserRole {

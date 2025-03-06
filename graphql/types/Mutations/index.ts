@@ -8,10 +8,10 @@ export { default as resetPasswordWithToken } from "./public/resetPasswordWithTok
 export { default as renewToken } from "./user/renewToken";
 export { default as updateUser } from "./user/updateUser";
 export { default as deleteUser } from "./user/requestUserDelete";
+export { default as resetPassword } from "./user/resetPassword";
 
 // 💰 Budget Mutations
 export { default as createBudget } from "./budget/createBudget";
-export { default as updateBudget } from "./budget/updateBudget";
 export { default as deleteBudget } from "./budget/deleteBudget";
 
 // 💸 Debt Mutations

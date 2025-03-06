@@ -1,4 +1,4 @@
-import { stringArg, mutationField, nonNull, arg, floatArg } from "nexus";
+import { stringArg, mutationField, nonNull } from "nexus";
 import { ApolloError } from "apollo-server-micro";
 import { authorizeFieldCurrentUser } from "@/graphql/utils";
 
@@ -6,12 +6,17 @@ export default mutationField("deleteTransaction", {
   type: "Boolean",
   args: {
     transactionId: nonNull(stringArg()),
+    userId: nonNull(stringArg()),
   },
   authorize: authorizeFieldCurrentUser,
-  async resolve(_root, { transactionId }, ctx) {
+  async resolve(_root, { transactionId, userId }, ctx) {
+    if (userId !== ctx.user.id) {
+      throw new ApolloError("Unauthorized", "UNAUTHORIZED_NOT_SAME_USER");
+    }
+
     const user = await ctx.prisma.user.findUnique({
       where: {
-        id: ctx.user.id,
+        id: userId,
       },
     });
     if (!user) {

@@ -1,12 +1,12 @@
-import { list, nonNull, queryField, stringArg } from "nexus";
+import { nonNull, queryField, stringArg, list } from "nexus";
 import {
   authorizeFieldCurrentUser,
   orComposeAuthorize,
   authorizeFieldUserIsAdmin,
 } from "@/graphql/utils";
 
-export default queryField("getBudgets", {
-  type: list("Budget"),
+export default queryField("getDebts", {
+  type: list("Debt"),
   args: {
     userId: nonNull(stringArg()),
   },
@@ -15,9 +15,12 @@ export default queryField("getBudgets", {
     authorizeFieldUserIsAdmin,
   ),
   resolve: async (_, { userId }, ctx) => {
-    return ctx.prisma.budget.findMany({
+    return ctx.prisma.debt.findMany({
       where: {
         userId,
+      },
+      orderBy: {
+        updatedAt: "desc",
       },
     });
   },

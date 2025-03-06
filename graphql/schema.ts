@@ -8,18 +8,21 @@ import {
 import * as types from "./types";
 
 export const schema = makeSchema({
-  types: [types],
-  shouldGenerateArtifacts: process.env.NODE_ENV !== "production",
-  prettierConfig: join(process.cwd(), ".prettierrc"),
-  plugins: [
+types: [types],
+shouldGenerateArtifacts: process.env.NODE_ENV !== "production",
+...(process.env.NODE_ENV === "development" && {
+    prettierConfig: join(process.cwd(), ".prettierrc"),
+}),
+plugins: [
     connectionPlugin(),
     fieldAuthorizePlugin({
-      formatError({ error }) {
+    formatError({ error }) {
         throw error ?? new Error("Not authorized");
-      },
+    },
     }),
     queryComplexityPlugin(),
-  ],
+],
+
   features: {
     abstractTypeStrategies: {
       __typename: true,

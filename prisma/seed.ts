@@ -16,8 +16,6 @@ async function main() {
     },
   });
 
-  /* ############################## */
-
   /* USERS ############################## */
 
   for (let i = 1; i <= 5; i++) {
@@ -48,12 +46,16 @@ async function main() {
   const budgets = [];
 
   for (let i = 1; i <= 6; i++) {
+    const isRecurring = i % 2 === 0; // Alternamos entre recurrente y no recurrente
     const budget = await prisma.budget.create({
       data: {
         name: `Presupuesto ${i}`,
         amount: 500 + i * 100,
         category: i % 2 === 0 ? "FOOD_AND_GROCERIES" : "ENTERTAINMENT",
-        endDate: new Date(new Date().setMonth(new Date().getMonth() + i)),
+        isRecurring,
+        recurringStartDate: isRecurring ? new Date(2024, 11, 1) : null, // Si es recurrente, inicia en diciembre 2024
+        createdAt: new Date(2024, 11, 1),
+        updatedAt: new Date(2024, 11, 1),
         userId: user1.id,
       },
     });
@@ -64,7 +66,7 @@ async function main() {
       await prisma.transaction.create({
         data: {
           name: `Transacción ${j} del Presupuesto ${i}`,
-          date: new Date(),
+          date: new Date(2024, 11, j + 1), // Transacciones en diciembre 2024
           amount: 20 + j * 5,
           type: "EXPENSE",
           category: i % 2 === 0 ? "FOOD_AND_GROCERIES" : "ENTERTAINMENT",
@@ -73,6 +75,26 @@ async function main() {
         },
       });
     }
+  }
+
+  // Agregar al menos un presupuesto recurrente por usuario
+  for (let i = 2; i <= 5; i++) {
+    const user = await prisma.user.findUnique({
+      where: { email: `usuario${i}@pokeapp.es` },
+    });
+
+    await prisma.budget.create({
+      data: {
+        name: `Presupuesto recurrente usuario${i}`,
+        amount: 750,
+        category: "EDUCATION",
+        isRecurring: true,
+        recurringStartDate: new Date(2024, 11, 1), // Diciembre 2024
+        createdAt: new Date(2024, 11, 1),
+        updatedAt: new Date(2024, 11, 1),
+        userId: user.id,
+      },
+    });
   }
 
   /* ############################## */
