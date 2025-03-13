@@ -107,7 +107,8 @@ ${JSON.stringify(user)}
        - Si la transacción es un "EXPENSE" revisa los nombres de los presupuestos del usuario y asigna asigna la **"budgetId"** correspondiente.
        - Tanto con DEBT como con EXPENSE, se abierto en la interpretación de las coincidencias, intenta buscar relaciones entre lo que se menciona en la transacción y los nombres de presupuestos y deudas del usuario. 
        - **Si hay varias opciones posibles, elige la que tenga un nombre más similar al de la transacción.**  
-       - **Si no se encuentra un presupuesto o deuda coincidente, NO incluyas "budgetId" ni "debtId" en la respuesta**.  
+       - **Si no se encuentra un presupuesto o deuda coincidente, NO incluyas "budgetId" ni "debtId" en la respuesta**. 
+
 
 8️ **Fecha de la transacción ("date")**  
    - Si el "transactionText" menciona una fecha relativa (ejemplo: "ayer", "el sábado pasado", "hace tres días"), calcula la fecha exacta y devuélvela en formato **ISO 8601** ("YYYY-MM-DDTHH:mm:ssZ").  
