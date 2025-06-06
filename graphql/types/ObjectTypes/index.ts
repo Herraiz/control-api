@@ -7,6 +7,7 @@ export { default as Budget } from "./Budget";
 export { default as Debt } from "./Debt";
 export { default as Transaction } from "./Transaction";
 export { default as TransactionsResponse } from "./TransactionsResponse";
+export { default as TransactionClassification } from "./TransactionClassification";
 export { default as AvailableBudgetDates } from "./AvailableBudgetDates";
 export { default as Alert } from "./Alert";
 
