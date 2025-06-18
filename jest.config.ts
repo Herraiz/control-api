@@ -16,29 +16,17 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },
-collectCoverage: true,
-coverageReporters: ["json", "html"],
-collectCoverageFrom: [
-"**/*.{js,ts}",
-"!**/*.d.ts",
-"!**/node_modules/**",
-"!**/dist/**",
-"!**/coverage/**",
-"!**/test/**",
-"!**/__tests__/**",
-"!**/__mocks__/**",
-"!**/jest.config.ts",
-"!**/jest.setup.ts"
-],
-coveragePathIgnorePatterns: [
-"/node_modules/",
-"/test/",
-"/__tests__/",
-"/dist/",
-"/coverage/",
-"jest.config.ts",
-"jest.setup.ts"
-],
+  collectCoverage: true,
+  coverageReporters: ["text", "html"],
+  collectCoverageFrom: [
+    "graphql/types/Queries/user/getAlerts.ts",
+    "graphql/types/Queries/reports/getCashFlow.ts",
+  ],
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "jest.config.ts",
+    "jest.setup.ts",
+  ],
 };
 
 export default config;
