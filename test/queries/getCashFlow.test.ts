@@ -25,11 +25,11 @@ describe("getCashFlow", () => {
           }
         }
       `,
-    variables: {
-    userId: "test-user-id",
-    year: "2023",
-    month: "5",
-    },
+      variables: {
+        userId: "test-user-id",
+        year: "2023",
+        month: "5",
+      },
     });
 
     expect(result.errors).toBeUndefined();
@@ -63,5 +63,37 @@ describe("getCashFlow", () => {
 
     expect(result.errors).toBeDefined();
     expect(result.errors[0].message).toBe("Unauthorized");
+  });
+
+  it("should return 12 months of cash flow data when no year/month specified", async () => {
+    const result = await server.executeOperation({
+      query: `
+        query GetCashFlow($userId: String!) {
+          getCashFlow(userId: $userId) {
+            month
+            incomes
+            expenses
+          }
+        }
+      `,
+      variables: {
+        userId: "test-user-id",
+      },
+    });
+
+    expect(result.errors).toBeUndefined();
+    expect(result.data.getCashFlow).toBeDefined();
+    expect(result.data.getCashFlow).toHaveLength(12);
+
+    // Verificar que cada mes tiene la estructura correcta
+    result.data.getCashFlow.forEach((monthData: any) => {
+      expect(monthData).toEqual({
+        month: expect.any(Number),
+        incomes: expect.any(Number),
+        expenses: expect.any(Number),
+      });
+      expect(monthData.month).toBeGreaterThanOrEqual(1);
+      expect(monthData.month).toBeLessThanOrEqual(12);
+    });
   });
 });
