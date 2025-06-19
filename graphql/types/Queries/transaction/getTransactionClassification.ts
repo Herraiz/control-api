@@ -18,14 +18,37 @@ export default queryField("getTransactionClassification", {
     authorizeFieldUserIsAdmin,
   ),
   resolve: async (_, { transactionText, userId }, ctx) => {
-    // FIXME: Hay que filtrar lo que se le vía de budgets, calcular los de este mes con lo de recurrentes y demás
+    // Obtener filtros de fecha para el mes actual (misma lógica que getBudgets)
+    const now = new Date();
+    const monthFilter = now.getMonth() + 1;
+    const yearFilter = now.getFullYear();
 
     // Obtener usuario y sus presupuestos/deudas
     const user = await ctx.prisma.user.findUnique({
       where: { id: userId },
       select: {
         id: true,
-        budgets: { select: { name: true, id: true } },
+        budgets: {
+          where: {
+            OR: [
+              {
+                isRecurring: true,
+                recurringStartDate: {
+                  lte: new Date(yearFilter, monthFilter, 0),
+                },
+              },
+              {
+                isRecurring: false,
+                createdAt: {
+                  gte: new Date(yearFilter, monthFilter - 1, 1),
+                  lt: new Date(yearFilter, monthFilter, 1),
+                },
+              },
+            ],
+          },
+          select: { name: true, id: true },
+          orderBy: { updatedAt: "desc" },
+        },
         debts: { select: { name: true, id: true } },
       },
     });
@@ -33,6 +56,8 @@ export default queryField("getTransactionClassification", {
     if (!user) {
       throw new ApolloError("User not found", "USER_NOT_FOUND");
     }
+
+    console.log("user", user);
 
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
